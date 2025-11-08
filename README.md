@@ -49,7 +49,10 @@ Evidence ← groundedIn ← Source → Code, datasets, design files, lab notes
 
 ## MESA: The Enforcement
 
-**One simple rule:** CC-licensed nodes cannot be retrieved without `sourceLink` + `creator`.
+**Two levels of enforcement:**
+
+### Level 1: Storage Validation
+CC-licensed nodes must contain `sourceLink` + `creator` to be stored.
 
 ```python
 # This works - complete attribution
@@ -71,11 +74,48 @@ Evidence ← groundedIn ← Source → Code, datasets, design files, lab notes
 }
 ```
 
-### Enforcement Points
+### Level 2: Usage Enforcement
+Attribution must be included when CC-licensed content is retrieved, referenced, displayed, or exported.
 
-- **Node retrieval** - Validation before serving data
+```python
+# Retrieval - Attribution automatically bundled
+node = api.get_node('pages:evidence-001')
+# Returns: node with '_attribution' bundle attached
+
+# Reference creation - Must include attribution
+api.create_reference(
+    source='pages:evidence-001',
+    context={
+        'citation': 'Smith 2024',
+        'sourceLink': 'https://lab.example.com/dataset-001',  # Required
+        'creator': 'Jane Smith'  # Required
+    }
+)
+# ✗ Without sourceLink/creator: "Cannot reference CC-licensed node without attribution"
+
+# Rendering - Attribution automatically shown
+html = renderer.render_html(node)
+# Output includes attribution footer with license, source, creator
+
+# Export - Attribution in all outputs
+citation = exporter.export_citation(node)
+# "Jane Smith. Cell migration increases... Retrieved from https://..."
+```
+
+### Five Enforcement Points
+
+1. **Node retrieval** - Attribution bundled in API responses
+2. **Reference creation** - Cannot link without attribution in context
+3. **Query results** - CC nodes include attribution automatically
+4. **Display/rendering** - Attribution footer added to HTML/Markdown
+5. **Export operations** - PDFs, citations, JSON include attribution
+
+### Technical Implementation
+
 - **JSON Schema** - Structural validation with conditional rules
-- **Python API** - Reference implementation with automatic bundling
+- **Python validation** - Storage-layer enforcement (`mesa_reference.py`)
+- **Usage enforcement** - Point-of-use enforcement (`mesa_usage_enforcement.py`)
+- **AttributedNode wrapper** - Makes content inseparable from attribution
 
 ## Files in This Repository
 
@@ -84,16 +124,18 @@ Evidence ← groundedIn ← Source → Code, datasets, design files, lab notes
 - `mesa_schema.json` - JSON Schema with CC license validation rules
 
 ### Implementation
-- `mesa_reference.py` - Python enforcement engine
-- `MESA_reference_spec.md` - Complete specification with compliance checklist
+- `mesa_reference.py` - Storage validation and retrieval enforcement
+- `mesa_usage_enforcement.py` - Usage-layer enforcement (references, rendering, export)
+- `MESA_reference_spec.md` - Retrieval enforcement specification
+- `MESA_usage_enforcement.md` - Usage enforcement specification with compliance checklist
 - `test_mesa_schema.py` - Validation tests demonstrating enforcement
 
 ### Examples
 - `dg_validation.py` - Shows validation logic and license inheritance
-- `COMMIT_MESSAGE.txt` - Summary of changes from base schema
 
 ## Quick Start
 
+### Storage Validation
 ```python
 from mesa_reference import MESAReference, DiscourseGraphAPI
 
@@ -117,6 +159,33 @@ else:
     print(f"Blocked: {response['error']}")
 ```
 
+### Usage Enforcement
+```python
+from mesa_usage_enforcement import UsageEnforcedAPI, NodeRenderer
+
+# Initialize usage enforcement
+api = UsageEnforcedAPI(graph_data)
+renderer = NodeRenderer()
+
+# Retrieve node - attribution automatically bundled
+node = api.get_node('pages:evidence-123')
+# node contains '_attribution' bundle
+
+# Create reference - must include attribution
+result = api.create_reference(
+    source_node_id='pages:evidence-123',
+    reference_context={
+        'citation': 'Smith et al. 2024',
+        'sourceLink': node['_attribution']['sourceLink'],
+        'creator': node['_attribution']['creator']
+    }
+)
+
+# Render with automatic attribution
+html = renderer.render_html(node)
+# HTML includes attribution footer
+```
+
 ## Use Cases
 
 ### Research Labs
@@ -133,13 +202,17 @@ Team members reference each other's work knowing attribution is enforced at the 
 
 ## Design Philosophy
 
-**Simple over complex** - One rule (CC needs sourceLink + creator) instead of elaborate schemes
+**Two-level enforcement** - Validate at storage, enforce at usage
 
-**Enforce at retrieval** - Check once when serving data, not at every operation
+**Simple over complex** - CC needs sourceLink + creator (that's it)
 
-**Machine-enforceable** - Computers validate, humans don't track attribution manually
+**Attribution travels with content** - Not just validated, but bundled in every use
 
-**Fail closed** - Missing attribution blocks retrieval rather than serving incomplete data
+**Enforce at point of use** - References, rendering, exports all check attribution
+
+**Machine-enforceable** - Computers validate and bundle, humans don't track manually
+
+**Fail closed** - Missing attribution blocks operations rather than serving incomplete data
 
 **Composable** - Nodes are modular units that maintain attribution when combined
 
