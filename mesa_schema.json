@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://discoursegraphs.com/schema/v0/mesa-schema.json",
+  "title": "MESA: Machine-Enforceable Schema for Attribution",
+  "description": "Enforces attribution requirements on node retrieval - CC-licensed nodes must include sourceLink and creator",
+  "definitions": {
+    "evidence": {
+      "type": "object",
+      "required": ["@type", "title"],
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uri"
+        },
+        "@type": {
+          "type": "string",
+          "const": "pages:zsoX6_bEl"
+        },
+        "title": {
+          "type": "string"
+        },
+        "licenseName": {
+          "type": "string",
+          "description": "License identifier (e.g., 'CC BY 4.0', 'CC0 1.0')"
+        },
+        "licenseLink": {
+          "type": "string",
+          "format": "uri"
+        },
+        "sourceLink": {
+          "type": "string",
+          "format": "uri",
+          "description": "Required for CC-licensed content - link to original source"
+        },
+        "creator": {
+          "type": "string",
+          "description": "Required for CC-licensed content - author/creator name"
+        },
+        "attributionStatement": {
+          "type": "string"
+        },
+        "rightsStatement": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "licenseName": {
+                "type": "string",
+                "pattern": "^CC"
+              }
+            },
+            "required": ["licenseName"]
+          },
+          "then": {
+            "required": ["sourceLink", "creator"],
+            "properties": {
+              "sourceLink": {
+                "type": "string",
+                "format": "uri",
+                "minLength": 1
+              },
+              "creator": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "source": {
+      "type": "object",
+      "required": ["@type", "title"],
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uri"
+        },
+        "@type": {
+          "type": "string",
+          "const": "pages:rVONqNC48"
+        },
+        "title": {
+          "type": "string"
+        },
+        "licenseName": {
+          "type": "string"
+        },
+        "licenseLink": {
+          "type": "string",
+          "format": "uri"
+        },
+        "sourceLink": {
+          "type": "string",
+          "format": "uri",
+          "description": "Required for CC-licensed content"
+        },
+        "creator": {
+          "type": "string",
+          "description": "Required for CC-licensed content"
+        },
+        "sourceType": {
+          "type": "string",
+          "enum": ["Literature", "Code", "Dataset", "Design File", "Lab Notes", "Other"]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "licenseName": {
+                "type": "string",
+                "pattern": "^CC"
+              }
+            },
+            "required": ["licenseName"]
+          },
+          "then": {
+            "required": ["sourceLink", "creator"],
+            "properties": {
+              "sourceLink": {
+                "type": "string",
+                "format": "uri",
+                "minLength": 1
+              },
+              "creator": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/definitions/evidence"
+    },
+    {
+      "$ref": "#/definitions/source"
+    }
+  ]
+}

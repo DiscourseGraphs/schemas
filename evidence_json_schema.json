@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://discoursegraphs.com/schema/v0/evidence-schema.json",
+  "title": "Evidence Node Schema",
+  "type": "object",
+  "required": ["@type", "title", "content"],
+  "properties": {
+    "@id": {
+      "type": "string",
+      "format": "uri"
+    },
+    "@type": {
+      "type": "string",
+      "const": "pages:zsoX6_bEl"
+    },
+    "title": {
+      "type": "string"
+    },
+    "licenseName": {
+      "type": "string"
+    },
+    "licenseLink": {
+      "type": "string",
+      "format": "uri"
+    },
+    "sourceLink": {
+      "type": "string",
+      "format": "uri"
+    },
+    "attributionStatement": {
+      "type": "string"
+    },
+    "rightsStatement": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "licenseName": {
+            "type": "string",
+            "pattern": "^CC"
+          }
+        },
+        "required": ["licenseName"]
+      },
+      "then": {
+        "required": ["sourceLink", "attributionStatement"],
+        "properties": {
+          "sourceLink": {
+            "type": "string",
+            "format": "uri",
+            "minLength": 1
+          },
+          "attributionStatement": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
+}
