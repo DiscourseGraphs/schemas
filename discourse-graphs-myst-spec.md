@@ -5,6 +5,7 @@
 **Authors:** 
 - Matt Akamatsu (ORCID: [0000-0002-0286-5310](https://orcid.org/0000-0002-0286-5310))
 - Claude Opus 4.5 (Anthropic, December 2025)
+Derived from a document drafted by Anton Molina (ORCID: [0000-0002-7253-2714](https://orcid.org/0000-0002-7253-2714))
 
 **Status:** Proposal
 
