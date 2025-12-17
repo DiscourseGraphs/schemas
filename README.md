@@ -128,17 +128,11 @@ Evidence ← groundedIn ← Source → Code, datasets, design files, lab notes
 - **[MESA_reference_spec.md](MESA_reference_spec.md)** - Complete MESA specification with compliance checklist
 
 ### Schema Definitions
-- `simplified_DG_schema.json` - Core discourse graph structure (JSON-LD)
 - `mesa_schema.json` - JSON Schema with CC license validation rules
 - `evidence_json_schema.json` - Evidence node schema
 
 ### Implementation
 - `mesa_reference.py` - Python enforcement engine
-- `test_mesa_schema.py` - Validation tests demonstrating enforcement (if exists)
-
-### Examples (MESA)
-- `dg_validation.py` - Shows validation logic and license inheritance (if exists)
-- `COMMIT_MESSAGE.txt` - Summary of changes from base schema (if exists)
 
 ## Quick Start
 
