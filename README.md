@@ -1,8 +1,8 @@
-# Discourse Graphs with MESA
+# Discourse Graphs: Structured Scientific Knowledge
 
-A machine-enforceable schema for research attribution that ensures proper credit travels with open-licensed content.
+This repository contains specifications and schemas for creating **discourse graphs**—structured representations of scientific research as interconnected knowledge components.
 
-## What This Is
+## What Are Discourse Graphs?
 
 **Discourse Graphs** provide a structured way to represent research as interconnected knowledge components:
 - **Evidence** nodes capture discrete observations from experiments/datasets
@@ -12,7 +12,10 @@ A machine-enforceable schema for research attribution that ensures proper credit
 
 Typed relationships connect these nodes—Evidence supports or opposes Claims, Questions motivate research, Evidence is grounded in Sources.
 
-**MESA** (Machine-Enforceable Schema for Attribution) adds automatic attribution enforcement: when you retrieve CC-licensed content, the system guarantees you also get the `sourceLink` and `creator` fields. No manual tracking, no missing credits.
+This repository provides two complementary approaches to working with discourse graphs:
+
+1. **MyST Markdown Syntax** ([discourse-graphs-myst-spec.md](discourse-graphs-myst-spec.md)) - Embed discourse graph semantics directly in MyST Markdown documents using specialized directives and roles
+2. **MESA** (Machine-Enforceable Schema for Attribution) - A JSON-based schema with automatic attribution enforcement for CC-licensed content
 
 ## Why This Matters
 
@@ -22,9 +25,50 @@ Traditional research papers bundle everything together. You can't easily:
 - Verify what code/data generated specific results
 - Ensure attribution when content is remixed
 
-Discourse graphs make research modular and linkable. MESA ensures that as evidence gets reused across research projects, attribution automatically comes along.
+Discourse graphs make research modular and linkable. The MyST Markdown syntax makes it easy to embed these semantics directly in your scientific documents. MESA ensures that as evidence gets reused across research projects, attribution automatically comes along.
 
-## The Schema
+## Approach 1: MyST Markdown Directives
+
+The **MyST Markdown specification** provides a natural, document-centric way to create discourse graphs. It extends MyST Markdown with custom directives for claims, evidence, and figures, plus roles for inline references.
+
+### Key Features
+
+- **Minimal syntax**: Two core directives (`{claim}` and `{evidence}`), four relation types
+- **Progressive complexity**: Start simple, add detail as needed
+- **Stable references**: Optional IDs for robust cross-referencing
+- **MyST-native**: Follows existing MyST conventions
+
+### Quick Example
+
+```markdown
+:::{claim} claim-ppk2-expression
+:label: PPK2-based energy regeneration improves protein expression
+
+Adding PPK2 to cell-free expression reactions provides sustained energy 
+that increases overall protein yield.
+:::
+
+:::{evidence} ev-egfp-50pct
+:label: PPK increases eGFP expression by 50%
+:supports: claim-ppk2-expression
+
+Fluorescence measurements show consistent 50% increase in eGFP signal 
+when 5 mM PPK is added to reactions.
+:::
+
+:::{figure} ./figures/ppk-expression.png
+:label: fig-ppk-expression
+:grounds: ev-egfp-50pct
+
+Barplot showing eGFP fluorescence with and without PPK treatment.
+:::
+```
+
+For the complete specification, see [discourse-graphs-myst-spec.md](discourse-graphs-myst-spec.md).
+
+## Approach 2: MESA Schema
+
+**MESA** (Machine-Enforceable Schema for Attribution) provides a JSON-based approach with automatic attribution enforcement. When you retrieve CC-licensed content, the system guarantees you also get the `sourceLink` and `creator` fields. No manual tracking, no missing credits.
 
 ### Core Node Types
 
@@ -79,18 +123,22 @@ Evidence ← groundedIn ← Source → Code, datasets, design files, lab notes
 
 ## Files in This Repository
 
+### Specifications
+- **[discourse-graphs-myst-spec.md](discourse-graphs-myst-spec.md)** - Complete MyST Markdown specification for embedding discourse graphs in documents
+- **[MESA_reference_spec.md](MESA_reference_spec.md)** - Complete MESA specification with compliance checklist
+
 ### Schema Definitions
 - `simplified_DG_schema.json` - Core discourse graph structure (JSON-LD)
 - `mesa_schema.json` - JSON Schema with CC license validation rules
+- `evidence_json_schema.json` - Evidence node schema
 
 ### Implementation
 - `mesa_reference.py` - Python enforcement engine
-- `MESA_reference_spec.md` - Complete specification with compliance checklist
-- `test_mesa_schema.py` - Validation tests demonstrating enforcement
+- `test_mesa_schema.py` - Validation tests demonstrating enforcement (if exists)
 
-### Examples
-- `dg_validation.py` - Shows validation logic and license inheritance
-- `COMMIT_MESSAGE.txt` - Summary of changes from base schema
+### Examples (MESA)
+- `dg_validation.py` - Shows validation logic and license inheritance (if exists)
+- `COMMIT_MESSAGE.txt` - Summary of changes from base schema (if exists)
 
 ## Quick Start
 
@@ -154,6 +202,18 @@ Team members reference each other's work knowing attribution is enforced at the 
 ## License
 
 This schema and reference implementation are released under CC0 1.0 (public domain). Use freely for any purpose.
+
+## Contributing
+
+We welcome contributions to improve discourse graphs specifications and implementations!
+
+### How to Contribute
+
+- **Report issues**: Found a bug or have a feature request? [Open an issue](https://github.com/DiscourseGraphs/schemas/issues) on GitHub
+- **Suggest improvements**: Have ideas for enhancing the MyST spec or MESA schema? [Open an issue](https://github.com/DiscourseGraphs/schemas/issues) to discuss
+- **Submit changes**: Ready to contribute code or documentation? [Open a pull request](https://github.com/DiscourseGraphs/schemas/pulls)
+
+For questions about the MyST specification, refer to the [discourse-graphs-myst-spec.md](discourse-graphs-myst-spec.md) or reach out via GitHub issues.
 
 ## Contact
 
