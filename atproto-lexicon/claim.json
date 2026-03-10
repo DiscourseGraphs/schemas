@@ -1,0 +1,53 @@
+{
+  "lexicon": 1,
+  "id": "org.discoursegraphs.claim",
+  "description": "A statement that an agent asserts or proposes within a discourse graph. Claims are the primary assertional unit: they can be supported or opposed by evidence, address questions, and be compiled into theories or models. The epistemic status distinguishes between claims (believed with adequate evidence), hypotheses (posed for discussion without asserting belief), and community-defined variants.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["text", "createdAt"],
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 8192,
+            "description": "The claim text. A declarative statement that can be supported or opposed by evidence."
+          },
+          "epistemicStatus": {
+            "type": "ref",
+            "ref": "org.discoursegraphs.defs#epistemicStatus",
+            "description": "The epistemic status of this statement. Defaults to unspecified (generic statement) per incremental formalization: authors can refine to 'claim', 'hypothesis', etc. as their thinking develops."
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 16384,
+            "description": "Optional elaboration, context, or reasoning behind this claim."
+          },
+          "localLabel": {
+            "type": "ref",
+            "ref": "org.discoursegraphs.defs#localLabel",
+            "description": "Optional local label override (e.g., 'Conclusion', 'Finding', 'Design Principle')."
+          },
+          "tags": {
+            "type": "array",
+            "maxLength": 32,
+            "items": {
+              "type": "string",
+              "maxLength": 256
+            }
+          },
+          "provenance": {
+            "type": "ref",
+            "ref": "org.discoursegraphs.defs#provenanceInfo"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}

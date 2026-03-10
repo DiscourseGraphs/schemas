@@ -1,0 +1,41 @@
+{
+  "lexicon": 1,
+  "id": "org.discoursegraphs.endorsement",
+  "description": "An endorsement expressing an agent's belief in or validation of a discourse graph node. At the moment of publication, a researcher can endorse statements — for example, upgrading a hypothesis to a claim by asserting it has sufficient evidential support. Endorsements form part of the accountability layer: they are authored, timestamped, and tied to the endorser's identity and reputation.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["subject", "createdAt"],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT-URI of the discourse graph node being endorsed."
+          },
+          "endorsementType": {
+            "type": "string",
+            "description": "The nature of the endorsement.",
+            "knownValues": [
+              "believe",
+              "validated",
+              "retract",
+              "qualified"
+            ]
+          },
+          "qualification": {
+            "type": "string",
+            "maxLength": 4096,
+            "description": "Optional qualification or condition on the endorsement (e.g., 'valid under conditions X but not Y')."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}

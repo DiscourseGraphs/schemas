@@ -1,0 +1,64 @@
+{
+  "lexicon": 1,
+  "id": "org.discoursegraphs.issue",
+  "description": "An issue represents a candidate future experiment or investigation, closing the loop in the lab discourse graph variation. When a claim lacks sufficient evidence, an issue articulates what experiment or measurement would strengthen or resolve it. Issues, when claimed by a researcher, become experiments that generate new results (evidence). Maps to the base Question type for interoperability, but carries additional experimental planning semantics.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["text", "createdAt"],
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 4096,
+            "description": "Description of the proposed experiment, measurement, or investigation."
+          },
+          "motivatedBy": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT-URI of the claim or evidence gap that motivates this issue."
+          },
+          "assignee": {
+            "type": "string",
+            "format": "did",
+            "description": "DID of the person who has claimed this issue for investigation."
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status of this issue.",
+            "knownValues": [
+              "open",
+              "claimed",
+              "inProgress",
+              "completed",
+              "wontDo"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 16384,
+            "description": "Detailed description of the proposed experiment, including anticipated methods, expected outcomes, or decision criteria."
+          },
+          "tags": {
+            "type": "array",
+            "maxLength": 32,
+            "items": {
+              "type": "string",
+              "maxLength": 256
+            }
+          },
+          "provenance": {
+            "type": "ref",
+            "ref": "org.discoursegraphs.defs#provenanceInfo"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}

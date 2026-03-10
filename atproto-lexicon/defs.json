@@ -1,0 +1,109 @@
+{
+  "lexicon": 1,
+  "id": "org.discoursegraphs.defs",
+  "description": "Shared type definitions for the Discourse Graphs protocol. Defines the base node types (Question, Claim, Evidence, Source) and relation types (Supports, Opposes, Addresses, Informs) that constitute the core discourse graph schema.",
+  "defs": {
+    "epistemicStatus": {
+      "type": "string",
+      "description": "The epistemic status of a statement. Open (not closed) to allow community-specific extensions.",
+      "knownValues": [
+        "claim",
+        "hypothesis",
+        "conjecture"
+      ]
+    },
+    "relationStrength": {
+      "type": "string",
+      "description": "Optional qualitative indicator of relation strength. Open to extension.",
+      "knownValues": [
+        "strong",
+        "moderate",
+        "weak",
+        "disputed"
+      ]
+    },
+    "localLabel": {
+      "type": "object",
+      "description": "A community-local label mapping for a node or relation type. Enables local variation in terminology (e.g., 'hypothesis' vs 'conjecture') while preserving interoperability through the base type reference.",
+      "required": ["label", "baseType"],
+      "properties": {
+        "label": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "The local display label used by this community or tool."
+        },
+        "baseType": {
+          "type": "string",
+          "description": "The base schema type this local label maps to, as an NSID (e.g., 'org.discoursegraphs.claim')."
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 1024,
+          "description": "Optional description of how this community uses this label."
+        }
+      }
+    },
+    "sourceRef": {
+      "type": "object",
+      "description": "A reference to a source document, which may be identified by DOI, URL, AT-URI, or free text citation.",
+      "properties": {
+        "doi": {
+          "type": "string",
+          "description": "Digital Object Identifier for the source."
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL for the source."
+        },
+        "atUri": {
+          "type": "string",
+          "format": "at-uri",
+          "description": "AT-URI pointing to another record on the network."
+        },
+        "citation": {
+          "type": "string",
+          "maxLength": 4096,
+          "description": "Free-text citation string."
+        }
+      }
+    },
+    "provenanceInfo": {
+      "type": "object",
+      "description": "Provenance metadata for a discourse graph node, following PROV-O semantics. Tracks how the node was generated (manual authoring, AI-assisted extraction, etc.) and by whom.",
+      "properties": {
+        "wasGeneratedBy": {
+          "type": "string",
+          "description": "Description or identifier of the activity that produced this node.",
+          "knownValues": [
+            "manualAuthoring",
+            "aiAssistedExtraction",
+            "aiSuggested",
+            "importedFromSource"
+          ]
+        },
+        "wasAttributedTo": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of the agent who authored or validated this node."
+        },
+        "validatedBy": {
+          "type": "array",
+          "description": "DIDs of agents who have validated this node after initial creation (e.g., after AI extraction).",
+          "items": {
+            "type": "string",
+            "format": "did"
+          }
+        },
+        "derivedFrom": {
+          "type": "array",
+          "description": "AT-URIs of records this node was derived from.",
+          "items": {
+            "type": "string",
+            "format": "at-uri"
+          }
+        }
+      }
+    }
+  }
+}
