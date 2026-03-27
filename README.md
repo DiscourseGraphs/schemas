@@ -1,6 +1,6 @@
 # Discourse Graphs: Structured Scientific Knowledge
 
-This repository contains specifications and schemas for creating **discourse graphs**—structured representations of scientific research as interconnected knowledge components.
+This repository contains early-stage prototype specifications and schemas for creating **discourse graphs**—structured representations of scientific research as interconnected knowledge components. It is intendend for discussion.
 
 ## What Are Discourse Graphs?
 

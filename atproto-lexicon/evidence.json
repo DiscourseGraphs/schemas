@@ -1,0 +1,84 @@
+{
+  "lexicon": 1,
+  "id": "org.discoursegraphs.evidence",
+  "description": "An evidence bundle: a minimal interpretation of an artifact (data, observation, experimental outcome) that can support or oppose claims. Evidence is deliberately separated from claims as a first-class type because this distinction confers critical benefits for scientific reasoning — enabling assessment of what is known empirically vs. what is asserted, structuring contributions at different career stages, and supporting flexible abstraction over potentially conflicting evidence. In the lab variation, evidence from ongoing work is labeled a 'result' tied to an 'experiment' source.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["text", "createdAt"],
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 8192,
+            "description": "The evidence statement: a minimal interpretation of data or observations from a specific study or experiment."
+          },
+          "source": {
+            "type": "ref",
+            "ref": "org.discoursegraphs.defs#sourceRef",
+            "description": "Reference to the source document, dataset, or experiment that produced this evidence."
+          },
+          "sourceRecord": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT-URI pointing to a org.discoursegraphs.source record on the network, if available."
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 16384,
+            "description": "Optional additional context: methods, conditions, limitations, or contextual details (e.g., cell line, model organism, task parameters) needed to interpret this evidence."
+          },
+          "localLabel": {
+            "type": "ref",
+            "ref": "org.discoursegraphs.defs#localLabel",
+            "description": "Optional local label override (e.g., 'Result', 'Observation', 'Measurement')."
+          },
+          "contextEntities": {
+            "type": "array",
+            "description": "Optional references to domain-specific entities relevant to interpreting this evidence (e.g., cell lines, model organisms, datasets, tasks). Enables queries like 'find all evidence for claim A, subset by cell line'.",
+            "maxLength": 64,
+            "items": {
+              "type": "object",
+              "required": ["name"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "maxLength": 512,
+                  "description": "Name or identifier of the entity."
+                },
+                "entityType": {
+                  "type": "string",
+                  "maxLength": 256,
+                  "description": "The type of entity (e.g., 'cellLine', 'modelOrganism', 'dataset', 'method')."
+                },
+                "uri": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Optional URI identifying this entity in an external ontology or database."
+                }
+              }
+            }
+          },
+          "tags": {
+            "type": "array",
+            "maxLength": 32,
+            "items": {
+              "type": "string",
+              "maxLength": 256
+            }
+          },
+          "provenance": {
+            "type": "ref",
+            "ref": "org.discoursegraphs.defs#provenanceInfo"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}

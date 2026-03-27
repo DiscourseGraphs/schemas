@@ -1,0 +1,50 @@
+{
+  "lexicon": 1,
+  "id": "org.discoursegraphs.supports",
+  "description": "A reified 'supports' relation between discourse graph nodes. Relations are separate assertions with their own metadata (author, provenance, strength) rather than attributes of nodes. Typically connects evidence to a claim, or a claim to another claim. The support relation itself is a statement that can be believed or contested.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["subject", "object", "createdAt"],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT-URI of the supporting node (the evidence or claim that provides support)."
+          },
+          "object": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT-URI of the supported node (the claim being supported)."
+          },
+          "strength": {
+            "type": "ref",
+            "ref": "org.discoursegraphs.defs#relationStrength",
+            "description": "Optional qualitative assessment of the strength of this support relation."
+          },
+          "warrant": {
+            "type": "string",
+            "maxLength": 4096,
+            "description": "Optional argumentation warrant: the reasoning or methodological basis that justifies this support relationship. When communities disagree about what counts as evidence or valid inference, warrants make those disagreements explicit."
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 8192,
+            "description": "Optional elaboration on the nature of this support relationship."
+          },
+          "provenance": {
+            "type": "ref",
+            "ref": "org.discoursegraphs.defs#provenanceInfo"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}
