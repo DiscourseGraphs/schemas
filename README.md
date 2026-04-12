@@ -1,88 +1,79 @@
-# Discourse Graphs: Structured Scientific Knowledge
+# Discourse Graphs: A Schema for Structured Scientific Knowledge
 
-This repository contains early-stage prototype specifications and schemas for creating **discourse graphs**—structured representations of scientific research as interconnected knowledge components. It is intendend for discussion.
+This repository defines the **Discourse Graphs** schema — a minimal, interoperable data model for representing scientific research as interconnected knowledge components rather than monolithic documents.
 
-## What Are Discourse Graphs?
+## Core Schema
 
-**Discourse Graphs** provide a structured way to represent research as interconnected knowledge components:
-- **Evidence** nodes capture discrete observations from experiments/datasets
-- **Claims** express assertions or conclusions
-- **Questions** represent research unknowns
-- **Sources** hold supporting materials (code, datasets, design files, lab notes)
+The base schema has **4 node types** and **4 relation types**:
 
-Typed relationships connect these nodes—Evidence supports or opposes Claims, Questions motivate research, Evidence is grounded in Sources.
+| Node         | Description                                                  |
+|--------------|--------------------------------------------------------------|
+| **Question** | Scientific unknowns addressable by research methods          |
+| **Claim**    | Atomic, generalized assertions that answer research questions |
+| **Evidence** | Specific empirical observations from a particular application of a research method |
+| **Source**   | Research materials that generate evidence (experiments, studies, articles) |
 
-This repository represents a conceptual schema that grounds discussion about discourse graphs: [conceptual-schema-draft.md](conceptual-schema-draft.md). 
+| Relation                     | Description                              |
+|------------------------------|------------------------------------------|
+| **Supports / Opposed By**    | Evidence supports or contradicts a claim |
+| **Opposes / Supported By**   | (inverse of the above)                   |
+| **Addresses / Addressed By** | Claim answers a question                 |
+| **Informs**                  | Contextual relevance between nodes       |
 
-The formal schema can be found as [Web Ontology Language (OWL/RDF)](https://discoursegraphs.com/schema/dg_core.ttl) and [ATProto lexicon](https://github.com/DiscourseGraphs/schemas/tree/main/atproto-lexicon). These formal schemas are drafts meant for further discussion. 
+Claims and evidence are deliberately separated as first-class types. Relations are reified — each is its own assertion with authorship, provenance, and timestamps.
 
-This repository also describes two exploratory, hypothetical approaches to working with discourse graphs:
+The full conceptual specification, including design rationale, common variations (lab, HCI, UX research), and prior art, is in [**conceptual-schema-draft.md**](conceptual-schema-draft.md).
 
-1. **MyST Markdown Syntax** ([discourse-graphs-myst-spec.md](discourse-graphs-myst-spec.md)) - Embed discourse graph semantics directly in MyST Markdown documents using specialized directives and roles
-2. **MESA** (Machine-Enforceable Schema for Attribution) - A JSON-based schema with automatic attribution enforcement for CC-licensed content
+![Base discourse graph schema](media/image4.png)
 
-## Why This Matters
+## Formal Schemas
 
-Traditional research papers bundle everything together. You can't easily:
-- Reuse a single finding without copying entire papers
-- Track which evidence supports which claims across papers
-- Verify what code/data generated specific results
-- Ensure attribution when content is remixed
+### OWL/RDF
 
-Discourse graphs make research modular and linkable. The MyST Markdown syntax will make it easy to embed these semantics directly in your scientific documents. MESA will ensure that as evidence gets reused across research projects, attribution automatically comes along.
+[**owl/dg_core.ttl**](owl/dg_core.ttl) and [**owl/dg_base.ttl**](owl/dg_base.ttl) define the base schema as a Web Ontology Language specification. 
 
-## Use Cases
+### ATProto Lexicon
 
-### Research Labs
-Create evidence panels with automatic attribution tracking. When datasets are CC-licensed, links and credit automatically propagate through derived analyses.
+[**atproto-lexicon/**](atproto-lexicon/) defines a prototype ATProto Lexicon (`org.discoursegraphs.*`) mapping the base schema to federated ATProto records. Design highlights:
 
-### Open Science
-Share findings as structured evidence nodes instead of static PDFs. Others can reference specific claims while attribution metadata travels automatically.
+- **Reified relations** as separate records with own authorship, provenance, and timestamps
+- **Incremental formalization** via optional fields — nodes start as plain text, gain structure over time
+- **Open `knownValues`** (not closed enums) so communities can extend without schema migration
+- **`localLabel`** mapping lets communities use their own terminology while preserving interoperability
 
-### Meta-Research
-Build knowledge graphs where every connection preserves provenance. Trace which datasets generated which evidence supporting which claims.
+See the [ATProto lexicon README](atproto-lexicon/README.md) for full design decisions, worked examples, and open questions.
 
-### Collaborative Research
-Team members reference each other's work knowing attribution is enforced at the system level, not manually maintained in documents.
+### JSON-LD
 
-## Design Philosophy
+Example usage: [MATSUlab issue-exchange analysis](https://github.com/DiscourseGraphs/MATSUlab-issue-exchange-analysis). Useful for MCP servers and interoperation between ATProto and the semantic web (e.g., nanopublications).
 
-**Simple over complex** - One rule (CC needs sourceLink + creator) instead of elaborate schemes
+## Design Principles
 
-**Enforce at retrieval** - Check once when serving data, not at every operation
+- **Minimal shared schema** — define only what is needed for interoperability across tools
+- **Incremental formalization** — nodes are born with minimal required formality, progressively refined
+- **Local labels, shared types** — communities use their own terminology, mapped to base types for federation
+- **Reified relations** — relations are separate assertions with their own metadata, not node attributes
+- **Composable** — nodes are modular units that maintain provenance when combined
 
-**Machine-enforceable** - Computers validate, humans don't track attribution manually
+See https://arxiv.org/abs/2407.20666 for details on its implementation and use.
 
-**Fail closed** - Missing attribution blocks retrieval rather than serving incomplete data
+## Exploratory Specifications
 
-**Composable** - Nodes are modular units that maintain attribution when combined
+The following are early-stage explorations of applications built on the core schema. They are included for discussion and are not part of the core specification.
 
-## Future Directions
+- [**MyST Markdown Syntax**](explorations/myst/discourse-graphs-myst-spec.md) — Embed discourse graph semantics directly in MyST Markdown documents using specialized directives and roles (Phase 1 draft)
+- [**MESA**](explorations/mesa/) (Machine-Enforceable Schema for Attribution) — Automatic attribution enforcement for CC-licensed content at retrieval time (proof-of-concept with reference implementation)
 
-- Automatic DOI/ORCID resolution for creator fields
-- License compatibility checking (e.g., CC BY → CC BY-SA validation)
-- Citation format generation from attribution bundles
-- Blockchain-anchored provenance for high-stakes research
-- Federation protocol for cross-institution discourse graphs
+## Related Projects
+
+- [discoursegraphs.com](https://discoursegraphs.com/) — Discourse Graphs tools and community
+- mira.science - International workshop developing modular research attribution schema and interoperable tooling 
 
 ## License
 
-This schema and reference implementation are released under CC0 1.0 (public domain). Use freely for any purpose.
+CC0 1.0 (public domain). Use freely for any purpose.
 
 ## Contributing
 
-We welcome contributions to improve discourse graphs specifications and implementations!
-
-### How to Contribute
-
-- **Report issues**: Found a bug or have a feature request? [Open an issue](https://github.com/DiscourseGraphs/schemas/issues) on GitHub
-- **Suggest improvements**: Have ideas for enhancing the MyST spec or MESA schema? [Open an issue](https://github.com/DiscourseGraphs/schemas/issues) to discuss
-- **Submit changes**: Ready to contribute code or documentation? [Open a pull request](https://github.com/DiscourseGraphs/schemas/pulls)
-
-For questions about the MyST specification, refer to the [discourse-graphs-myst-spec.md](discourse-graphs-myst-spec.md) or reach out via GitHub issues.
-
-## Contact
-
-For questions about MESA or discourse graphs, open an issue or reach out to the maintainers.
-
-
+- **Report issues or suggest improvements**: [Start a discussion](https://github.com/DiscourseGraphs/schemas/discussions)
+- **Submit changes**: [Open a pull request](https://github.com/DiscourseGraphs/schemas/pulls)
