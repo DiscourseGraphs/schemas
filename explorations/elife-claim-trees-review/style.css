@@ -49,8 +49,17 @@ a { color: var(--accent); }
 
 .app {
   display: grid;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto auto auto 1fr;
   height: 100vh;
+}
+
+.disclaimer {
+  padding: 8px 18px;
+  background: rgba(246, 197, 68, 0.08);
+  border-bottom: 1px solid rgba(246, 197, 68, 0.25);
+  color: var(--warn);
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 header.top {
