@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Headley 2026 — eLife claim-tree export viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.30.2/cytoscape.min.js"></script>
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <h1 id="paper-title">…</h1>
+      <span class="sub" id="paper-authors"></span>
+      <a class="doi" id="paper-doi" target="_blank" rel="noopener"></a>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-view="oxa" role="tab">
+        OXA JSON <span class="count" id="count-oxa">—</span>
+      </button>
+      <button class="tab" data-view="jld" role="tab">
+        DG JSON-LD <span class="count" id="count-jld">—</span>
+      </button>
+      <button class="tab" data-view="ttl" role="tab">
+        Claim-relations TTL <span class="count" id="count-ttl">—</span>
+      </button>
+    </nav>
+
+    <div class="main">
+      <div class="viewport">
+        <div id="cy"></div>
+        <div id="ttl-view" class="ttl-view hidden"></div>
+        <div id="legend" class="legend"></div>
+        <div id="diff" class="diff-pane"></div>
+      </div>
+      <aside class="sidebar" id="sidebar">
+        <div class="empty">Click a node or edge to inspect.</div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
